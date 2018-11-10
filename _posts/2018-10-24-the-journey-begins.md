@@ -4,8 +4,7 @@ post_title: The Journey Begins
 author: gaelcolas
 post_excerpt: ""
 layout: post
-permalink: >
-  https://synedgy.com/2018/10/24/the-journey-begins/
+permalink: https://synedgy.com/the-journey-begins/
 published: true
 post_date: 2018-10-24 07:59:41
 ---
