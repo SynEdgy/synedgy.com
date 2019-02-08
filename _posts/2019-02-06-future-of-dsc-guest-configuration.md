@@ -54,24 +54,42 @@ The DSC Resources have been doing well and are still actively developped by the 
 
 <h2>Intent and realignment of the DSC Team</h2>
 
-Although it was quite clear that DSC needed to be decoupled from WMF as soon as PowerShell Core's project started even before becoming public, DSC's development did not stop. However, it did not get the same publicity and openness as PowerShell Core. [DSC for linux](https://github.com/Microsoft/PowerShell-DSC-for-Linux) already existed, but the tight dependency of the Windows DSC LCM with WMI means there is two code base and a lot of overhead (i.e. OMI) to be compatible cross platform and with the legacy. Not to mention the MOF file format.
+Although it was clear that DSC needed to be decoupled from WMF as soon as PowerShell Core's project started even before becoming public, DSC's development did not stop and came to the same conclusion. However, it did not get the same publicity and openness as PowerShell Core. [DSC for linux](https://github.com/Microsoft/PowerShell-DSC-for-Linux) already existed, but the tight dependency of the Windows DSC LCM with WMI means there is two code base and a lot of overhead (i.e. OMI) to be compatible cross platform and with the legacy (Who likes MOF, seriously...).
 If DSC was to innovate, it needed to part from this old model, like PowerShell Core did.
 
 The DSC team, then led by Mark Gray, started working on a new DSC LCM - hastly coined _DSC Core_ - and published the first DSC Planning update blog to explain the work in progress, challenges, and Philosophy.
 
-The intent, from then and confirmed by new Program Manager, Michael Greene at the PS Summit and PSConfEU 2018, was to release the new version of DSC. Possibly Open-Sourcing it as early as they would be capable of, despite the increased effort required when developping in the open, as they learnt from PS Core.
+The intent from then, and perdured by new Program Manager, Michael Greene, at the PS Summit and PSConfEU 2018, was to release the new version of DSC. Possibly Open-Sourcing it as early as they would be capable of, despite the increased effort required when developping in the open, as they learnt from PS Core.
 
-But in June, the almost-traditional re-org month at Microsoft, their effort had been realigned with the company's goal, which is both good and bad from a DSC User perspective, especially on-prem users.
-I'd refer you to my previous post about [Understanding the new Microsoft](https://gaelcolas.com/2018/06/04/for-it-pros-understanding-the-new-microsoft/) to explain the motives and patterns, but in short it's "Cloud First" with and agile development that continuously deliver for fast feedback.
+But in June 2018, the almost-traditional re-org month at Microsoft, their effort had been realigned with the company's goal, which is both good and bad from a DSC User perspective, especially bad for on-prem users.
+I recommend my previous post about [Understanding the new Microsoft](https://gaelcolas.com/2018/06/04/for-it-pros-understanding-the-new-microsoft/) to explain the motives and patterns, but in short refocuses on "Cloud First" with and agile development with continuous delivery for fast feedback - the Azure DevOps product (formerly VSTS) is a great example.
 
-What that means for the work on the new native LCM is to develop and use it actively for solving existing Azure challenges - some sort of eat your own dog food approach.
+From then on, the purpose of the effort to develop an agent to configure the OSes from inside (as an autonomous agent) would be focused at helping Azure customers to manage their workload by extending Azure services or offering new ones.
+It might seem like a high level change in words, because effectively the team is still developping a component that used to be called *the new DSC*, and that still leverages DSC Resources, but it's not.
+It's a chasm from building a generic, standalone, cross-platform configuration platform, because creating a **new DSC is not the goal or purpose**, and is **not even in the roadmap**.
+
+The goals, if I was to word it, would be something like:
+- expose consistent auditing, compliance, and configuration interfaces to Azure Guests (i.e. VMs)
+- support any OS offered on Azure
+- enable multiple use cases (instances) without conflicting operations
+- make it near-realtime, not WMI speeds...
+- enable Infrastructure as Code principles
+- do it at Azure scale for modern (albeit VMs) workloads
+
+What that means for the work going into the new *native LCM* is to develop and use it actively for solving existing Azure challenges - some sort of eat your own dog food approach.
+The sad part is that it's no longer the new DSC that we've been promised for a while, or what some - including myself - hoped from the name _DSC Core_ (since clarified): an updated LCM with feature parity, working on any OS, with new features and open-source.
+
+Does that mean DSC is dead? Far from it, but it's definitely a setback for those expecting some features or a new LCM soon-ish.
+
+
 It has the benefit to be:
-- far less _theoretical_ than building a generic framework
-- support an untethered release and feedback cadence
-- enable iterative solution development that uses the components as they're developed, and develop as they need
-- Access to millions of machines, telemetry, and huge scale to solve modern use cases
+- far less _theoretical_ than attempting to build a generic framework/agent
+- support an untethered release and feedback cadence within Microsoft Azure
+- enable iterative solution development that uses the components as they're developed, and develop them as they are needed
+- Access to millions of machines, benefit from telemetry, and huge scale to solve modern use cases: a short and very valuable feedback loop
 
-So the sad part is, it's no longer the new DSC that we've been promised for a while and there won't be a tool you can use
+
+
 
 
 
@@ -80,10 +98,14 @@ So the sad part is, it's no longer the new DSC that we've been promised for a wh
 
 <h2>AWS DSC</h2>
 
+<h1> Conclusions & Predictions </h1>
 
 > <h3>DSC is NOT Dead, long live Guest Configuration!</h3>
 
-DSC Planning updates:
+
+<h1>Useful links and references</h1>
+
+DSC Planning updates blog posts:
 - September 2017: [DSC Future Direction Update](https://blogs.msdn.microsoft.com/powershell/2017/09/12/dsc-future-direction-update/)
 - January 2018: [Desired State Configuration (DSC) Planning Update - January 2018](https://blogs.msdn.microsoft.com/powershell/2018/01/26/dsc-planning-update-january-2018/)
 - September 2018: [Desired State Configuration (DSC) Planning Update – September 2018](https://blogs.msdn.microsoft.com/powershell/2018/09/13/desired-state-configuration-dsc-planning-update-september-2018/)
