@@ -1,9 +1,16 @@
-# RFC Configuration
+# Primer on Configuration Management
 
-This repository is an exploration to find out what a modern and multi-purpose
-configuration management tool should look like, so we can define the overall architecture and interactions between the involved components.
+This article explains the concepts behind configuration management from code (policy-driven configuration),
+why it's the natural evolution from scripting, and its characteristics.  
+In this context, Configuration Management (CM) refers to the practice initiated with CFEngine,
+and later evolved with Puppet (2005), OpsCode later Chef software (2008), Desired State Configuration
+(2012), and more recently Kubernetes (2014) with its object system (and its own particularities).
 
-## __Problem definition__
+Many other Configuration Management tools exist and are not considered here. They either don't use the same
+principle (i.e. GUI-driven) or they may follow or implement similar approaches (or partially) but implement loose contracts (offering more flexibility, but risking to suffer from the scaling problems CM tries to
+address).
+
+## Problem definition
 
 Setting up a system usually starts from a base configuration, sometimes seen as the default configuration or the **current state** of the configuration.
 We start from that state, and progressively change it to the state we want: the **Desired State**.
@@ -27,7 +34,6 @@ great many number of low level changes. To simplify the
 management of the changes, we abstract low level changes into higher level ones.  
 One of the reason is to let a person who does not understand
 those low level changes to apply the high level change.
-
 
 Typically, we group low level commands/calls into higher level
 functions, so that  
@@ -69,11 +75,10 @@ Even with higher level functions, we focus on the transformation they bring, and
 <img src="./assets/chaining_imperative_transforms.png" />
 
 By thinking about the transforms, we force the administrators to think in terms
-of changes at a given time, but they look the bigger picture.
+of changes at a given time, but they lose the ability to understand the bigger picture.
 
 We're making the configuration transactional, and the administrator focuses
-on a single transaction.
-
+on a single transaction at a given time.
 
 ### Configuration Drift
 
@@ -86,7 +91,7 @@ constrained by time), after the transforms have been applied.
 
 When the system to configure is complex, we have to chain those imperative
 transforms together (run script 1, then script 2), maybe over a long time or
-across different people or teams.  
+across different people or teams, increasing change management complexity.  
 As time passes, it's easy for the system to change away from that state
 we wanted, without being caught by monitoring and remediated. This is called
 **configuration drift**, and often accumulates over time.
@@ -94,4 +99,43 @@ we wanted, without being caught by monitoring and remediated. This is called
 ### Elevating abstractions with **idempotent** resources
 
 To improve the abstraction offered by standalone scripts or higher level
-commands, we can enforce some contracts with the 
+commands, we can apply some practices for those scripts.  
+The first thing to change is to make sure we only apply an imperative when
+needed, which means we test if the change is needed before we apply the transform.  
+
+By doing so, no matter how many times you apply the transform, it will only effectively
+change something when it detects it's needed.  
+Even with the change applied several times, it will always give the same result.  
+This is **idempotence**.
+
+If a transform was designed to:  
+`Append the content '[something]' to the end of the file xyz.txt.`  
+We now change the thinking to:  
+`Make sure the file xyz.txt ends with '[something]'.`
+
+The difference is that we want the file to end with that content, not to bluntly
+add the content if it's already there.
+
+Now this also shifts how we think about changes to the system. We now want to
+reach a desired state, not just apply a transformation.
+We're now thinking about the state(s), not so much about what imperatives changes
+are required to get there.
+
+<img src="./assets/DAG_of_states.png" />
+
+But the thing that effects the change is still some kind of "high level function" or code.  
+What changes is that we have different expectations from that:
+- It will test before making a change to see if it's that change is needed
+- It will converge to the same state no matter how many times it's executed
+
+This piece of code has to take the desired state as parameters, and make sure
+the systems **converges** to it. In our case it's called a **resource**, but it has
+other names in other ecosystems.
+
+We declare the desired state, and that "function" has to **converge** to that state.  
+To do so, the resource always implement the following methods:
+- Test: Find out whether the current state is the same as the desired state.
+- Set: Apply the Transform to converge to the desired state.
+
+The test has to, in some ways, call another method:
+- Get: Retrieve the current state
