@@ -1,19 +1,19 @@
 # Primer on Configuration Management
 
-Everyone is managing some configurations, one way or another, but there are a few noticeable
-concepts that are worth explaining.  
+Every computer system requires to manage its configuration, one way or another, but there are a few noticeable
+concepts that are worth expanding upon when addressing scalability.  
 
-The first one is the when we don't manage the changes, usually we update the configuration through
-a GUI or an API, and we rely on what we know of the system and estinguish the fires as needed.  
-For a small team with a small system to manage, and fairly stable needs, that might just work.
-Afterall that was the whole power of Windows servers when only a handful of those servers where needed
+The first one is the when we don't _manage_ the changes, we usually update the configuration through
+a GUI or an API, rely on what we know of the system, and estinguish the fires as needed.  
+For a small team with a small system to manage, and fairly stable needs, that might just work.  
+Afterall that was one of the selling points for Windows servers when only a handful of those servers were needed
 for the IT needs of an organisation.
 
-The Unixes (and derived flavours) had managed to scale through task automation using scripting and 
+The Unixes (and derived flavours) had managed some level of scale through task automation, using scripting, and 
 leveraging the powerful shell and utilities built over the years. But even this approach showed its limit
 when many members had to collaborate on a great number of systems. 
 
-As the digital was conquering more services and industry, the IT services tried to find ways to
+As the digital age was conquering more services and industry, the IT services tried to find new ways to
 scale. The number of servers needed grew exponentially, the number of team members increased, the
 requirements where in perpetual evolution, and the complexity of the systems skyrocketed.  
 
@@ -24,13 +24,14 @@ One approach was to build software dedicated to manage systems, with the same ol
 The usual design revolves around a CMDB, coupled with some monitoring, a central GUI to make the changes,
 and pushing changes from the central server as they're released. 
 
-The other approach started from the princple that managing through GUI was hard, it's hard to reproduce, 
-document, or simply put, to collaborate. Applying 30 years of collaboration practices around software code
-sounded like a better way, and all was needed was to find a way to manage the **infrastructure from code**.  
+The other approach started from the principle that managing through GUI was hard to scale, hard to reproduce
+reliably, hard to document, or simply put, to collaborate.  
+There was an opportunity to leverage the learnings of 30 years of collaborative practices from software engineering.
+All that was needed was to find a way to manage the **infrastructure from code**.  
 This is the part I'm interested in covering today.
 
 This article explains the concepts behind configuration management from code (policy-driven configuration),
-why it's the natural evolution from (imperative) scripting, and its characteristics.  
+the natural evolution from (imperative) scripting, and its characteristics.  
 In this context, Configuration Management (CM) refers to the practices that crystallized with CFEngine,
 and later evolved with Puppet (2005), OpsCode later Chef software (2008), Desired State Configuration
 (2012), and more recently Kubernetes (2014) with its object system (although it has its own specificities).
@@ -61,13 +62,35 @@ rollback is when restoring a snapshot of a system (with all the caveats for the 
 ### Configuration: A Directed Acyclic Graph
 
 For this reason, the configuration of a system can be seen as a Directed Acyclic Graph, where each transformation
-(i.e. change to the system) is a vertex, and each resulting state an edge (or node).
+(i.e. change to the system) is a vertex (arrow), and each resulting state an edge (or node).
 
 <img src="./assets/DAG.png">
 
-It is also sometimes useful to take into consideration that the state evolves over time. The more time the system
-is alive, the more time it has to be subject to change, hence the bigger potential for complexity.  
+It is also sometimes useful to take into consideration that the state evolves over time, that's why I prefer to
+represent the DAG horizontally.  
+The more time the system is alive, the more time it has to be subject to change, hence the bigger potential for
+complexity.  
 Limiting the time the system is alive, reduce drastically its potential for complexity.
+
+Imagine attempting to trace the graph of an Active Directory domain that has existed for more than 20 years...
+
+## Scaling and dealing with complexity
+
+Complexity can be very subjective, but it's usually easier to discuss on what makes a system more complex
+to manage.  
+I usually use 3 factors to describe complexity:
+- Number of elements to manage (number of nodes, services, systems...)
+- Number of changes going into the system (something that changes once every year compared to every minutes)
+- Number of people working on the changes (how many people are making changes to the system)
+
+If all of them are low, the complexity should be manageable.
+If one starts increasing drastically, it will proportionally affect complexity.
+If several factors are involved, complexity will evolve exponentially.
+
+Time, again, as an aggravating factor on all of them:
+- some tech becomes old and less-known or less practical to manage
+- old changes are forgotten and the longer a system is alive the more changes it potentially had
+- People come and go in the team, eroding the institutional knowledge of the systems
 
 ## Managing Complexity with abstraction
 
