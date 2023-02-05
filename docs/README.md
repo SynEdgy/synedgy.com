@@ -4,7 +4,7 @@ Every computer system requires to manage its configuration, one way or another, 
 concepts that are worth expanding upon when addressing scalability.  
 
 The first one is the when we don't _manage_ the changes, we usually update the configuration through
-a GUI or an API, rely on what we know of the system, and estinguish the fires as needed.  
+a GUI or an API, rely on what we know of the system, and extinguish the fires as needed.  
 For a small team with a small system to manage, and fairly stable needs, that might just work.  
 Afterall that was one of the selling points for Windows servers when only a handful of those servers were needed
 for the IT needs of an organisation.
@@ -126,7 +126,7 @@ towards the desired state succeed.
 
 There is no guarantee that we will reach the desired state
 (beyond what's written within the script),
-and that the prerequisities are met before we can apply those
+and that the prerequisites are met before we can apply those
 changes (again, except what's within the script).
 Once an imperative transform has been applied, we don't know
 what happens if we try to apply the same transform again.  
@@ -169,7 +169,7 @@ we wanted, without being caught by monitoring and remediated. This is called
 ### Elevating abstractions with **idempotent** resources
 
 To improve the abstraction offered by standalone scripts or higher level
-commands, we can ask those scripts to follow some conventions, fulfill a **contract**.  
+commands, we can ask those scripts to follow some conventions, fulfil a **contract**.  
 The first is to make sure we only apply a change when needed,
 which means we test if the change is needed before we apply the transform.  
 
@@ -203,7 +203,7 @@ imperatives changes are required to get there.
 
 While *the resource* that effects the change is still some kind of "high level function",
 script, or code, we now have a more scalable abstraction which weighs less on the
-the cognitive load. We can think, discuss, collaborate in state (which is just data),
+cognitive load. We can think, discuss, collaborate in state (which is just data),
 and we don't have to handle the logic (if/else) at this level of discussion.  
 It is also easier to extract information about the current state, calling the **Get**
 method of the resources we discussed.
